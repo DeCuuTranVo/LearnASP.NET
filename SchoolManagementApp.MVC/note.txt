@@ -1,0 +1,29 @@
+Commands:
+
+Add package in dotnet
+    dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+
+
+Install tools in dotnet
+    dotnet tool install --global dotnet-ef 
+
+Generate Data objects from Database
+    dotnet ef dbcontext scaffold 'Server=localhost, 1433;Database=SchoolManagementDb;Trusted_Connection=false;MultipleActiveResultSets=true;Encrypt=false;user id=sa;password=Str0ngPa$$w0rd' Microsoft.EntityFrameworkCore.SqlServer -o Data -f --no-onconfiguring 
+
+Generate controllers from models
+    dotnet aspnet-codegenerator controller -name CoursesController -m Course -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f 
+
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Something to note 
+
+1. Meaning of directories in inside a project
+
+2. MVC concepts
+
+3. Dependency Injection and Inversion of Control
