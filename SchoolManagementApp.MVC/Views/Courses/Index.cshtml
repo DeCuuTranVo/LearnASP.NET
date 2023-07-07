@@ -7,25 +7,30 @@
 <h1>Index</h1>
 
 <p>
+    <!-- Navigate to the Create Action in the Courses Controller-->
     <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
+                <!-- Get the name of the model(table) object-->
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
+                <!-- Get the code of the model(table) object-->
                 @Html.DisplayNameFor(model => model.Code)
             </th>
             <th>
+                <!-- Get the credits of the model(table) object-->
                 @Html.DisplayNameFor(model => model.Credits)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        <!-- Loop through the records in table, display name, code, and credits-->
+        @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -34,10 +39,11 @@
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
+                @* @item.Credits *@
                 @Html.DisplayFor(modelItem => item.Credits)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | 
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>

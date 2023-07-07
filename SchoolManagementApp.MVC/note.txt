@@ -14,7 +14,10 @@ Generate controllers from models
     dotnet aspnet-codegenerator controller -name CoursesController -m Course -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f 
 
 
+    dotnet aspnet-codegenerator controller -name LecturersController -m Lecturer -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f
 
+
+    dotnet aspnet-codegenerator controller -name StudentsController -m Student -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f
 
 
 

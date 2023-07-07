@@ -10,24 +10,30 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <!-- When the form is submitted, it go to the CREATE action, in a POST REQUEST -->
         <form asp-action="Create">
+            <!-- if form is invalid, this line will print out what field is missing, what data -->
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <!-- This region input the Name field of the Course object/record -->
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <!-- This region input the Code field of the Course object/record -->
                 <label asp-for="Code" class="control-label"></label>
                 <input asp-for="Code" class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <!-- This region input the Credits field of the Course object/record -->
                 <label asp-for="Credits" class="control-label"></label>
                 <input asp-for="Credits" class="form-control" />
                 <span asp-validation-for="Credits" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <!-- Submit button -->
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
