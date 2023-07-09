@@ -1,5 +1,8 @@
 Commands:
 
+Docker run MSSQL image
+    docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Str0ngPa$$w0rd' -p 1400:1433 -d mcr.microsoft.com/mssql/server
+
 Add package in dotnet
     dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 
