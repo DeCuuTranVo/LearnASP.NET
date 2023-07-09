@@ -164,6 +164,9 @@ namespace SchoolManagementApp.MVC.Controllers
         // GET: Courses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            Console.WriteLine("Line 167");
+
+
             // if id == null: check if the id is null
             // _context.Courses == null: check if the Courses table exist
             if (id == null || _context.Courses == null)

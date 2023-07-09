@@ -30,3 +30,17 @@ Something to note
 2. MVC concepts
 
 3. Dependency Injection and Inversion of Control
+
+4. Partial class in C#
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Third party library:
+    1. Sweet Alert - https://sweetalert2.github.io/#download
+    2. Data Table - https://datatables.net/examples/styling/bootstrap5.html 
+
+
+#################################################################
+Challenges:
+    Write metadata class for Courses and Lecturer
+    scaffold code for Class and Enrollment
