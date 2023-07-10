@@ -9,6 +9,7 @@ Add package in dotnet
 
 Install tools in dotnet
     dotnet tool install --global dotnet-ef 
+    dotnet tool install -g dotnet-aspnet-codegenerator
 
 Generate Data objects from Database
     dotnet ef dbcontext scaffold 'Server=localhost, 1433;Database=SchoolManagementDb;Trusted_Connection=false;MultipleActiveResultSets=true;Encrypt=false;user id=sa;password=Str0ngPa$$w0rd' Microsoft.EntityFrameworkCore.SqlServer -o Data -f --no-onconfiguring 
@@ -22,7 +23,11 @@ Generate controllers from models
 
     dotnet aspnet-codegenerator controller -name StudentsController -m Student -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f
 
+    
+    dotnet aspnet-codegenerator controller -name ClassesController -m Class -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f
 
+
+    dotnet aspnet-codegenerator controller -name EnrollmentsController -m Enrollment -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -45,5 +50,5 @@ Third party library:
 
 #################################################################
 Challenges:
-    Write metadata class for Courses and Lecturer
-    scaffold code for Class and Enrollment
+    Write metadata class for Lecturer class (Done)
+    scaffold code for Class and Enrollment (Done)
