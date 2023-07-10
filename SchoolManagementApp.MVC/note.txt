@@ -5,6 +5,7 @@ Docker run MSSQL image
 
 Add package in dotnet
     dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+    dotnet add package Auth0.AspNetCore.Authentication
 
 
 Install tools in dotnet
@@ -29,7 +30,8 @@ Generate controllers from models
 
     dotnet aspnet-codegenerator controller -name EnrollmentsController -m Enrollment -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f
 
-
+Run dotnet project:
+    dotnet run --launch-profile https
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Something to note 
 
