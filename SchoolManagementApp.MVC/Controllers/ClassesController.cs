@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementApp.MVC.Data;
+using SchoolManagementApp.MVC.Models;
 
 namespace SchoolManagementApp.MVC.Controllers
 {
@@ -23,7 +24,10 @@ namespace SchoolManagementApp.MVC.Controllers
         // GET: Classes
         public async Task<IActionResult> Index()
         {
-            var schoolManagementDbContext = _context.Classes.Include(q => q.Course).Include(q => q.Lecturer);
+            // Include the details of related records. For each class, include a related course and lecturer
+            var schoolManagementDbContext = _context.Classes // SELECT * FROM classes c
+            .Include(q => q.Course) // LEFT JOIN Courses co on c.Courseid = co.Id
+            .Include(q => q.Lecturer); // LEFT JOIN Lecturers c on c.Lecturerid = l.Id 
             return View(await schoolManagementDbContext.ToListAsync());
         }
 
@@ -50,8 +54,24 @@ namespace SchoolManagementApp.MVC.Controllers
         // GET: Classes/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id");
-            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id");
+            // Let the user choose course and lecture
+            // ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name");
+
+
+            // var courses = _context.Courses.Select(q => new {
+            //     Coursestring = $"{q.Code} - {q.Name} ({q.Credits} Credits)",
+            //     Id = q.Id
+            // });
+            // ViewData["CourseId"] = new SelectList(courses, "Id", "Coursestring");
+
+            // // ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id");
+            // var lecturers = _context.Lecturers.Select(q => new {
+            //     Fullname = $"{q.FirstName} {q.LastName}",
+            //     Id = q.Id
+            // });
+            // ViewData["LecturerId"] = new SelectList(lecturers, "Id", "Fullname");
+
+            CreateSelectLists();
             return View();
         }
 
@@ -68,8 +88,10 @@ namespace SchoolManagementApp.MVC.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @class.CourseId);
-            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id", @class.LecturerId);
+            // If form invalid, reload SelectList before returning a page
+            // ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @class.CourseId);
+            // ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id", @class.LecturerId);
+            CreateSelectLists();
             return View(@class);
         }
 
@@ -86,8 +108,9 @@ namespace SchoolManagementApp.MVC.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @class.CourseId);
-            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id", @class.LecturerId);
+            // ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @class.CourseId);
+            // ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id", @class.LecturerId);
+            CreateSelectLists();
             return View(@class);
         }
 
@@ -123,8 +146,9 @@ namespace SchoolManagementApp.MVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @class.CourseId);
-            ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id", @class.LecturerId);
+            // ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", @class.CourseId);
+            // ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id", @class.LecturerId);
+            CreateSelectLists();
             return View(@class);
         }
 
@@ -167,9 +191,77 @@ namespace SchoolManagementApp.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<ActionResult> ManageEnrollments(int classId) {
+            var @class = await _context.Classes
+                .Include(q => q.Course)
+                .Include(q => q.Lecturer)
+                .Include(q => q.Enrollments)
+                    .ThenInclude(q => q.Student)
+                .FirstOrDefaultAsync(m => m.Id == classId);
+
+            var students = await _context.Students.ToListAsync();
+
+            var model = new ClassEnrollmentViewModel();
+            model.Class = new ClassViewModel{
+                Id = @class.Id,
+                CourseName = $"{@class.Course.Code} - {@class.Course.Name}",
+                LecturerName = $"{@class.Lecturer.FirstName} {@class.Lecturer.LastName}",
+                Time = @class.Time.ToString()
+            };
+
+            foreach (var stu in students) {
+                model.Students.Add(new StudentEnrollmentViewModel{
+                    Id = stu.Id,
+                    FirstName = stu.FirstName,
+                    LastName = stu.LastName,
+                    IsEnrolled = (@class?.Enrollments?.Any(q => q.StudentId == stu.Id)).GetValueOrDefault()
+                });
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EnrollStudent(int classId, int studentId, bool shouldEnroll) {
+            var enrollment = new Enrollment();
+            
+            if (shouldEnroll == true) {
+                enrollment.ClassId = classId;
+                enrollment.StudentId = studentId;
+                await _context.Enrollments.AddAsync(enrollment);
+            } else{
+                enrollment = await _context.Enrollments.FirstOrDefaultAsync(
+                    q => q.ClassId == classId && q.StudentId == studentId
+                );
+
+                if (enrollment != null) {
+                    _context.Enrollments.Remove(enrollment);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ManageEnrollments), new {id=classId});
+        }
+
         private bool ClassExists(int id)
         {
           return (_context.Classes?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private void CreateSelectLists() {
+            var courses = _context.Courses.Select(q => new {
+                Coursestring = $"{q.Code} - {q.Name} ({q.Credits} Credits)",
+                Id = q.Id
+            });
+            ViewData["CourseId"] = new SelectList(courses, "Id", "Coursestring");
+
+            // ViewData["LecturerId"] = new SelectList(_context.Lecturers, "Id", "Id");
+            var lecturers = _context.Lecturers.Select(q => new {
+                Fullname = $"{q.FirstName} {q.LastName}",
+                Id = q.Id
+            });
+            ViewData["LecturerId"] = new SelectList(lecturers, "Id", "Fullname");
         }
     }
 }

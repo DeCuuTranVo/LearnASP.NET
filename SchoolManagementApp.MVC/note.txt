@@ -30,8 +30,12 @@ Generate controllers from models
 
     dotnet aspnet-codegenerator controller -name EnrollmentsController -m Enrollment -dc SchoolManagementDbContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries -f
 
+Generate views from models
+    dotnet aspnet-codegenerator view ManageEnrollments Details -m ClassEnrollmentViewModel -outDir Views/Classes -f -udl
+
 Run dotnet project:
     dotnet run --launch-profile https
+    dotnet watch --launch-profile https
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Something to note 
 
@@ -42,6 +46,12 @@ Something to note
 3. Dependency Injection and Inversion of Control
 
 4. Partial class in C#
+
+5. MVC vs MVVM? What is a ViewModel?
+
+6. async vs await
+
+7. ! and ?
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
